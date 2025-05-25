@@ -73,7 +73,7 @@ fun PlansUI(
                         color = Color(0xFF333333)
                     )
                     Text(
-                        text = currentState.message,
+                        text = "${currentState.message}",
                         fontSize = 14.sp,
                         color = Color(0xFF666666),
                         modifier = Modifier.padding(top = 8.dp)
@@ -284,7 +284,7 @@ private fun PlanCard(
                         fontSize = 14.sp
                     )
                     Text(
-                        text = plan.originalPrice,
+                        text = "${plan.originalPrice}",
                         color = Color(0xFF999999),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Medium,
@@ -309,7 +309,7 @@ private fun PlanCard(
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
                     Text(
-                        text = plan.discountedPrice,
+                        text = "${plan.discountedPrice}",
                         color = Color(0xFF333333),
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold
