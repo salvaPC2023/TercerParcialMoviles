@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.salvador.data.NetworkResult
 import com.salvador.domain.Plan
-import com.lainus.domain.ShippingData
+import com.salvador.domain.ShippingData
 import com.salvador.usecases.GetPlans
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

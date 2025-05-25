@@ -1,6 +1,6 @@
 @file:OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 
-package com.lainus.examen.shipping
+package com.salvador.examen.shipping
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -34,8 +34,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
-import com.lainus.domain.Plan
-import com.lainus.domain.ShippingData
+import com.salvador.domain.Plan
+import com.salvador.domain.ShippingData
 import androidx.compose.foundation.text.KeyboardOptions
 
 // Eliminar la data class local ya que existe en domain

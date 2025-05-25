@@ -1,9 +1,9 @@
-package com.lainus.examen.shipping
+package com.salvador.examen.shipping
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lainus.domain.Plan
-import com.lainus.domain.ShippingData
+import com.salvador.domain.Plan
+import com.salvador.domain.ShippingData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -1,4 +1,4 @@
-package com.lainus.domain
+package com.salvador.domain
 
 data class ShippingData(
     val referencePhone: String = "",
