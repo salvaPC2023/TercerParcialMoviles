@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.lainus.framework"
+    namespace = "com.salvador.framework"
     compileSdk = 35
 
     defaultConfig {

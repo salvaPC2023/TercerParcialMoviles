@@ -145,12 +145,12 @@
   <component name="play_dynamic_filters_status">
     <option name="appIdToCheckInfo">
       <map>
-        <entry key="com.lainus.examen">
+        <entry key="com.salvador.examen">
           <value>
             <CheckInfo lastCheckTimestamp="1747954301824" />
           </value>
         </entry>
-        <entry key="com.lainus.examen.test">
+        <entry key="com.salvador.examen.test">
           <value>
             <CheckInfo lastCheckTimestamp="1747954301823" />
           </value>

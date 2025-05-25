@@ -8,11 +8,11 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
 }
 android {
-    namespace = "com.lainus.examen"
+    namespace = "com.salvador.examen"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.lainus.examen"
+        applicationId = "com.salvador.examen"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
