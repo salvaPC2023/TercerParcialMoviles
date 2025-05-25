@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -146,7 +147,7 @@ private fun PlansContent(
                 PlanCard(
                     plan = plans[page],
                     isSelected = page == currentIndex,
-                    onSelectPlan = { onPlanSelected(plans[page]) },
+                    onPlanSelected = { onPlanSelected(plans[page]) },
                     context = context,
                     navController = navController
                 )
@@ -234,14 +235,14 @@ private fun PlansContent(
 private fun PlanCard(
     plan: Plan,
     isSelected: Boolean,
-    onSelectPlan: () -> Unit,
+    onPlanSelected: () -> Unit,
     context: android.content.Context,
     navController: NavHostController
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(520.dp),
+            .height(580.dp), // Aumentar altura para acomodar dos botones
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(
@@ -274,7 +275,7 @@ private fun PlanCard(
                     )
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Sección de precios mejorada
             Column(
@@ -338,12 +339,12 @@ private fun PlanCard(
                 )
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Features con mejor diseño
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 plan.features.forEach { feature ->
                     Row(
@@ -361,8 +362,8 @@ private fun PlanCard(
                         Text(
                             text = feature,
                             color = Color(0xFF555555),
-                            fontSize = 13.sp,
-                            lineHeight = 18.sp,
+                            fontSize = 12.sp,
+                            lineHeight = 16.sp,
                             modifier = Modifier
                                 .padding(start = 8.dp)
                                 .weight(1f)
@@ -371,30 +372,30 @@ private fun PlanCard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Redes sociales con mejor espaciado
             Row(
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier.padding(vertical = 6.dp)
             ) {
                 plan.socialNetworks.forEach { network ->
                     SocialNetworkIcon(network)
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            // Botón mejorado con navegación
+            // BOTÓN 1: Seleccionar Plan y navegar
             Button(
                 onClick = {
-                    onSelectPlan()
+                    onPlanSelected()
                     navController.navigate("shipping_screen")
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
-                shape = RoundedCornerShape(25.dp),
+                    .height(48.dp),
+                shape = RoundedCornerShape(24.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFFF6B6B)
                 ),
@@ -402,16 +403,52 @@ private fun PlanCard(
                     defaultElevation = 4.dp
                 )
             ) {
-                Text(
-                    text = "Quiero este plan",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Center
+                Icon(
+                    Icons.Default.LocationOn,
+                    contentDescription = "Ubicación",
+                    tint = Color.White,
+                    modifier = Modifier.size(18.dp)
                 )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Seleccionar Plan",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.White
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // BOTÓN 2: WhatsApp
+            OutlinedButton(
+                onClick = {
+                    WhatsAppHelper.openWhatsApp(context)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                shape = RoundedCornerShape(24.dp),
+                border = androidx.compose.foundation.BorderStroke(
+                    1.dp, 
+                    Color(0xFF25D366)
+                ),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = Color(0xFF25D366)
+                )
+            ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_whatsapp),
-                    contentDescription = "WhatsApp"
+                    contentDescription = "WhatsApp",
+                    tint = Color(0xFF25D366),
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Contactar por WhatsApp",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF25D366)
                 )
             }
         }
@@ -436,7 +473,7 @@ private fun SocialNetworkIcon(network: String) {
             contentDescription = network,
             modifier = Modifier
                 .padding(horizontal = 6.dp)
-                .size(26.dp),
+                .size(24.dp),
             tint = Color.Unspecified
         )
     }

@@ -5,6 +5,6 @@ sealed class AppRoutes(val route: String) {
     object Shipping : AppRoutes("shipping_screen")
 
     init {
-        println("DEBUG: AppRoutes creado - route: $route")
+        println("AppRoutes creado - route: $route")
     }
 }

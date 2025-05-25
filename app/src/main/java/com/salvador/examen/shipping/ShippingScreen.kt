@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.LocationOn
@@ -38,8 +39,6 @@ import com.salvador.domain.Plan
 import com.salvador.domain.ShippingData
 import androidx.compose.foundation.text.KeyboardOptions
 
-// Eliminar la data class local ya que existe en domain
-
 @Composable
 fun ShippingScreen(
     selectedPlan: Plan,
@@ -55,7 +54,7 @@ fun ShippingScreen(
         viewModel.setSelectedPlan(selectedPlan)
     }
 
-    // Launcher para permisos de ubicación (solo cuando el usuario lo solicite)
+    // Launcher para permisos de ubicación
     val locationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -68,17 +67,29 @@ fun ShippingScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF8F9FA))
     ) {
-        // App Bar
+        // App Bar mejorada
         CenterAlignedTopAppBar(
-            title = { Text("Envío de SIM") },
+            title = { 
+                Text(
+                    "Configuración de Envío",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                ) 
+            },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                    Icon(
+                        Icons.Default.ArrowBack, 
+                        contentDescription = "Volver",
+                        tint = Color.White
+                    )
                 }
             },
-            colors = TopAppBarDefaults.topAppBarColors(
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = Color(0xFFFF5252),
                 titleContentColor = Color.White,
                 navigationIconContentColor = Color.White
@@ -90,12 +101,12 @@ fun ShippingScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp) // Reducir espacio entre elementos
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // Información del plan seleccionado
             PlanSummaryCard(plan = selectedPlan)
 
-            // Formulario
+            // Formulario de envío
             ShippingForm(
                 shippingData = shippingData,
                 onPhoneChange = viewModel::updateReferencePhone,
@@ -103,7 +114,7 @@ fun ShippingScreen(
                 locationPermissionLauncher = locationPermissionLauncher
             )
 
-            // Botón continuar - ROJO
+            // Botón continuar
             Button(
                 onClick = {
                     viewModel.submitShippingData()
@@ -112,19 +123,25 @@ fun ShippingScreen(
                 enabled = viewModel.isDataValid(),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp), // Reducir altura
-                shape = RoundedCornerShape(24.dp),
+                    .height(56.dp),
+                shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFF5252) // Mantener rojo
+                    containerColor = Color(0xFFFF5252),
+                    disabledContainerColor = Color.Gray.copy(alpha = 0.3f)
+                ),
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 6.dp
                 )
             ) {
                 Text(
-                    text = "Continuar",
+                    text = "Confirmar Envío",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
@@ -133,28 +150,51 @@ fun ShippingScreen(
 private fun PlanSummaryCard(plan: Plan) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White) // Cambiar a blanco
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
-            modifier = Modifier.padding(12.dp) // Reducir padding
+            modifier = Modifier.padding(20.dp)
         ) {
             Text(
-                text = "Plan seleccionado",
+                text = "Plan Seleccionado",
                 fontSize = 14.sp,
-                color = Color.Gray
+                color = Color.Gray,
+                fontWeight = FontWeight.Medium
             )
+            
+            Spacer(modifier = Modifier.height(8.dp))
+            
             Text(
                 text = plan.name,
-                fontSize = 18.sp,
+                fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFFFF5252)
             )
-            Text(
-                text = "${plan.discountedPrice}/mes - ${plan.dataAmount}",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
+            
+            Row(
+                modifier = Modifier.padding(top = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "${plan.discountedPrice}/mes",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+                Text(
+                    text = " • ",
+                    fontSize = 16.sp,
+                    color = Color.Gray
+                )
+                Text(
+                    text = plan.dataAmount,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Black
+                )
+            }
         }
     }
 }
@@ -168,33 +208,51 @@ private fun ShippingForm(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White) // Cambiar a blanco
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
-            modifier = Modifier.padding(12.dp), // Reducir padding
-            verticalArrangement = Arrangement.spacedBy(12.dp) // Reducir espacio
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = "Información de envío",
+                text = "Información de Contacto",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
             )
 
-            // Campo teléfono con menos altura
+            // Campo teléfono mejorado
             OutlinedTextField(
                 value = shippingData.referencePhone,
                 onValueChange = onPhoneChange,
-                label = { Text("Teléfono de referencia") },
+                label = { 
+                    Text(
+                        "Teléfono de referencia",
+                        fontSize = 14.sp
+                    ) 
+                },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Phone,
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = Color(0xFFFF5252)
                     )
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFFFF5252),
+                    focusedLabelColor = Color(0xFFFF5252)
+                ),
+                shape = RoundedCornerShape(12.dp)
+            )
+
+            Divider(
+                color = Color.Gray.copy(alpha = 0.3f),
+                thickness = 1.dp
             )
 
             // Sección de ubicación
@@ -218,38 +276,54 @@ private fun LocationSection(
     val context = LocalContext.current
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp) // Reducir espacio
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = "Ubicación de entrega",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium
+            text = "Ubicación de Entrega",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
         )
 
-        // Campos de coordenadas más compactos
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(6.dp) // Reducir espacio
-        ) {
-            OutlinedTextField(
-                value = if (latitude != 0.0) "%.4f".format(latitude) else "", // Formato más corto
-                onValueChange = { },
-                label = { Text("Latitud", fontSize = 12.sp) }, // Texto más pequeño
-                readOnly = true,
-                modifier = Modifier.weight(1f),
-                textStyle = androidx.compose.ui.text.TextStyle(fontSize = 14.sp) // Texto más pequeño
-            )
-            OutlinedTextField(
-                value = if (longitude != 0.0) "%.4f".format(longitude) else "", // Formato más corto
-                onValueChange = { },
-                label = { Text("Longitud", fontSize = 12.sp) }, // Texto más pequeño
-                readOnly = true,
-                modifier = Modifier.weight(1f),
-                textStyle = androidx.compose.ui.text.TextStyle(fontSize = 14.sp) // Texto más pequeño
-            )
+        // Mostrar coordenadas actuales
+        if (latitude != 0.0 && longitude != 0.0) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFF0F8FF)
+                )
+            ) {
+                Row(
+                    modifier = Modifier.padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.LocationOn,
+                        contentDescription = null,
+                        tint = Color(0xFFFF5252),
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Column {
+                        Text(
+                            text = "Ubicación seleccionada:",
+                            fontSize = 12.sp,
+                            color = Color.Gray,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = "Lat: ${String.format("%.4f", latitude)}, Lng: ${String.format("%.4f", longitude)}",
+                            fontSize = 14.sp,
+                            color = Color.Black,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                }
+            }
         }
 
-        // Botón obtener mi ubicación - NEGRO
+        // Botón obtener ubicación
         Button(
             onClick = {
                 val hasLocationPermission = ContextCompat.checkSelfPermission(
@@ -271,20 +345,27 @@ private fun LocationSection(
                 }
             },
             modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Black // Cambiar a negro
+                containerColor = Color(0xFF2196F3)
             )
         ) {
             Icon(
                 imageVector = Icons.Default.LocationOn,
                 contentDescription = null,
-                tint = Color.White
+                tint = Color.White,
+                modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Obtener mi ubicación", color = Color.White)
+            Text(
+                "Obtener Mi Ubicación Actual",
+                color = Color.White,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium
+            )
         }
 
-        // Mapa
+        // Mapa mejorado
         MapSection(
             latitude = latitude,
             longitude = longitude,
@@ -299,6 +380,8 @@ private fun MapSection(
     longitude: Double,
     onLocationSelected: (Double, Double) -> Unit
 ) {
+    val context = LocalContext.current
+    
     var mapProperties by remember {
         mutableStateOf(
             MapProperties(
@@ -309,7 +392,7 @@ private fun MapSection(
     }
 
     // Centrar en Bolivia por defecto (La Paz)
-    val defaultLocation = LatLng(-16.5000, -68.1500) // Centro de Bolivia
+    val defaultLocation = LatLng(-16.5000, -68.1500)
     val currentLocation = if (latitude != 0.0 && longitude != 0.0) {
         LatLng(latitude, longitude)
     } else {
@@ -317,38 +400,66 @@ private fun MapSection(
     }
 
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(currentLocation, 6f) // Zoom 6 para ver todo Bolivia
+        position = CameraPosition.fromLatLngZoom(currentLocation, if (latitude != 0.0) 15f else 6f)
     }
 
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(300.dp),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        GoogleMap(
-            modifier = Modifier.fillMaxSize(),
-            cameraPositionState = cameraPositionState,
-            properties = mapProperties,
-            onMapClick = { latLng ->
-                onLocationSelected(latLng.latitude, latLng.longitude)
-            }
-        ) {
-            if (latitude != 0.0 && longitude != 0.0) {
-                Marker(
-                    state = MarkerState(position = LatLng(latitude, longitude)),
-                    title = "Ubicación seleccionada"
-                )
-            }
+    // Actualizar cámara cuando cambie la ubicación
+    LaunchedEffect(latitude, longitude) {
+        if (latitude != 0.0 && longitude != 0.0) {
+            cameraPositionState.animate(
+                CameraPosition.fromLatLngZoom(LatLng(latitude, longitude), 15f)
+            )
         }
     }
 
-    Text(
-        text = "Toca en el mapa para seleccionar la ubicación de entrega",
-        fontSize = 12.sp,
-        color = Color.Gray,
-        modifier = Modifier.padding(top = 4.dp)
-    )
+    Column {
+        Text(
+            text = "Selecciona la ubicación en el mapa:",
+            fontSize = 14.sp,
+            color = Color.Gray,
+            fontWeight = FontWeight.Medium
+        )
+        
+        Spacer(modifier = Modifier.height(8.dp))
+        
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(350.dp),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        ) {
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
+                cameraPositionState = cameraPositionState,
+                properties = mapProperties,
+                uiSettings = MapUiSettings(
+                    zoomControlsEnabled = true,
+                    compassEnabled = true,
+                    myLocationButtonEnabled = false
+                ),
+                onMapClick = { latLng ->
+                    onLocationSelected(latLng.latitude, latLng.longitude)
+                }
+            ) {
+                if (latitude != 0.0 && longitude != 0.0) {
+                    Marker(
+                        state = MarkerState(position = LatLng(latitude, longitude)),
+                        title = "Ubicación de entrega",
+                        snippet = "Aquí se enviará tu SIM"
+                    )
+                }
+            }
+        }
+
+        Text(
+            text = "💡 Toca en cualquier lugar del mapa para seleccionar la ubicación de entrega",
+            fontSize = 12.sp,
+            color = Color.Gray,
+            modifier = Modifier.padding(top = 8.dp),
+            lineHeight = 16.sp
+        )
+    }
 }
 
 @SuppressLint("MissingPermission")
@@ -362,5 +473,8 @@ private fun getCurrentLocation(
         location?.let {
             onLocationReceived(it.latitude, it.longitude)
         }
+    }.addOnFailureListener {
+        // Si falla, usar ubicación por defecto de La Paz
+        onLocationReceived(-16.5000, -68.1500)
     }
 }
