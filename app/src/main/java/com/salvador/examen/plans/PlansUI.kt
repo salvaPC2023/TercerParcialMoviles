@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.salvador.domain.Plan
 import com.salvador.examen.R
+import com.salvador.examen.utils.WhatsAppHelper
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -36,6 +37,7 @@ fun PlansUI(
 ) {
     val state by viewModel.state.collectAsState()
     val currentIndex by viewModel.currentPlanIndex.collectAsState()
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -54,7 +56,9 @@ fun PlansUI(
                     plans = currentState.plans,
                     currentIndex = currentIndex,
                     onPlanIndexChanged = viewModel::onPlanIndexChanged,
-                    onPlanSelected = viewModel::onPlanSelected
+                    onPlanSelected = viewModel::onPlanSelected,
+                    viewModel = viewModel,
+                    context = context
                 )
             }
             is PlansViewModel.PlansState.Error -> {
@@ -86,7 +90,9 @@ private fun PlansContent(
     plans: List<Plan>,
     currentIndex: Int,
     onPlanIndexChanged: (Int) -> Unit,
-    onPlanSelected: (Plan) -> Unit
+    onPlanSelected: (Plan) -> Unit,
+    viewModel: PlansViewModel,
+    context: android.content.Context
 ) {
     val pagerState = rememberPagerState(pageCount = { plans.size })
     val coroutineScope = rememberCoroutineScope()
@@ -136,7 +142,8 @@ private fun PlansContent(
                 PlanCard(
                     plan = plans[page],
                     isSelected = page == currentIndex,
-                    onSelectPlan = { onPlanSelected(plans[page]) }
+                    onSelectPlan = { onPlanSelected(plans[page]) },
+                    context = context
                 )
             }
 
@@ -222,7 +229,8 @@ private fun PlansContent(
 private fun PlanCard(
     plan: Plan,
     isSelected: Boolean,
-    onSelectPlan: () -> Unit
+    onSelectPlan: () -> Unit,
+    context: android.content.Context
 ) {
     Card(
         modifier = Modifier
@@ -373,7 +381,10 @@ private fun PlanCard(
 
             // Botón mejorado
             Button(
-                onClick = onSelectPlan,
+                onClick = {
+                    // Quitar la verificación del plan ya que no lo necesitas
+                    WhatsAppHelper.openWhatsApp(context)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
@@ -394,9 +405,7 @@ private fun PlanCard(
                 )
                 Icon(
                     painter = painterResource(id = R.drawable.ic_whatsapp),
-                    contentDescription = "WhatsApp",
-                    tint = Color.White,
-                    modifier = Modifier.size(22.dp)
+                    contentDescription = "WhatsApp"
                 )
             }
         }
