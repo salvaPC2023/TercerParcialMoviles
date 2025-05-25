@@ -1,34 +1,31 @@
 package com.salvador.examen
 
-import com.salvador.examen.ui.theme.ExamenTheme
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.activity.enableEdgeToEdge
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.salvador.examen.navigation.PlansNavigation
+import com.salvador.examen.ui.theme.ExamenTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             ExamenTheme {
-                val navController = rememberNavController()
-
-                Scaffold(
-                    modifier = Modifier.fillMaxSize()
-                ) { innerPadding ->
-                    PlansNavigation(
-                        navController = navController,
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    println("DEBUG: MainActivity - Creando NavController")
+                    val navController = rememberNavController()
+                    println("DEBUG: MainActivity - Llamando a PlansNavigation")
+                    PlansNavigation(navController = navController)
                 }
             }
         }

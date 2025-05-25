@@ -36,6 +36,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+        freeCompilerArgs += listOf(
+            "-opt-in=com.google.accompanist.permissions.ExperimentalPermissionsApi"
+        )
     }
     buildFeatures {
         compose = true
@@ -87,6 +90,10 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.hilt.navigation.compose)
+    implementation(libs.maps.compose)
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+    implementation(libs.accompanist.permissions)
 }
 
 kapt {

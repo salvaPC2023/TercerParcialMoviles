@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.salvador.domain.Plan
 import com.salvador.examen.R
 import com.salvador.examen.utils.WhatsAppHelper
@@ -33,7 +34,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PlansUI(
-    viewModel: PlansViewModel = hiltViewModel()
+    viewModel: PlansViewModel = hiltViewModel(),
+    navController: NavHostController
 ) {
     val state by viewModel.state.collectAsState()
     val currentIndex by viewModel.currentPlanIndex.collectAsState()
@@ -58,7 +60,8 @@ fun PlansUI(
                     onPlanIndexChanged = viewModel::onPlanIndexChanged,
                     onPlanSelected = viewModel::onPlanSelected,
                     viewModel = viewModel,
-                    context = context
+                    context = context,
+                    navController = navController
                 )
             }
             is PlansViewModel.PlansState.Error -> {
@@ -92,7 +95,8 @@ private fun PlansContent(
     onPlanIndexChanged: (Int) -> Unit,
     onPlanSelected: (Plan) -> Unit,
     viewModel: PlansViewModel,
-    context: android.content.Context
+    context: android.content.Context,
+    navController: NavHostController
 ) {
     val pagerState = rememberPagerState(pageCount = { plans.size })
     val coroutineScope = rememberCoroutineScope()
@@ -143,7 +147,8 @@ private fun PlansContent(
                     plan = plans[page],
                     isSelected = page == currentIndex,
                     onSelectPlan = { onPlanSelected(plans[page]) },
-                    context = context
+                    context = context,
+                    navController = navController
                 )
             }
 
@@ -230,7 +235,8 @@ private fun PlanCard(
     plan: Plan,
     isSelected: Boolean,
     onSelectPlan: () -> Unit,
-    context: android.content.Context
+    context: android.content.Context,
+    navController: NavHostController
 ) {
     Card(
         modifier = Modifier
@@ -379,11 +385,11 @@ private fun PlanCard(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Botón mejorado
+            // Botón mejorado con navegación
             Button(
                 onClick = {
-                    // Quitar la verificación del plan ya que no lo necesitas
-                    WhatsAppHelper.openWhatsApp(context)
+                    onSelectPlan()
+                    navController.navigate("shipping_screen")
                 },
                 modifier = Modifier
                     .fillMaxWidth()

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.salvador.data.NetworkResult
 import com.salvador.domain.Plan
+import com.lainus.domain.ShippingData
 import com.salvador.usecases.GetPlans
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.compose.runtime.mutableStateOf
+import kotlinx.coroutines.flow.asStateFlow
 
 @HiltViewModel
 class PlansViewModel @Inject constructor(
@@ -52,8 +54,8 @@ class PlansViewModel @Inject constructor(
         _currentPlanIndex.value = index
     }
 
-    private val _selectedPlan = mutableStateOf<Plan?>(null)
-    val selectedPlan: Plan? get() = _selectedPlan.value
+    private val _selectedPlan = MutableStateFlow<Plan?>(null)
+    val selectedPlan: StateFlow<Plan?> = _selectedPlan.asStateFlow()
 
     fun onPlanSelected(plan: Plan) {
         _selectedPlan.value = plan
